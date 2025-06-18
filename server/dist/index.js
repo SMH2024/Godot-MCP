@@ -59,7 +59,7 @@ import { editorStateResource, selectedNodeResource, currentScriptResource } from
  */
 function main() {
     return __awaiter(this, void 0, void 0, function () {
-        var server, godot, error_1, err, cleanup;
+        var server, godot, error_1, err, error_2, keepAlive, cleanup;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -70,7 +70,12 @@ function main() {
                     });
                     // Register all tools
                     __spreadArray(__spreadArray(__spreadArray(__spreadArray([], nodeTools, true), scriptTools, true), sceneTools, true), editorTools, true).forEach(function (tool) {
-                        server.addTool(tool);
+                        server.addTool({
+                            name: tool.name,
+                            description: tool.description,
+                            parameters: tool.parameters,
+                            execute: tool.execute,
+                        });
                     });
                     // Register all resources
                     // Static resources
@@ -101,13 +106,27 @@ function main() {
                     console.warn('Will retry connection when commands are executed');
                     return [3 /*break*/, 4];
                 case 4:
-                    // Start the server
-                    server.start({
-                        transportType: 'stdio',
-                    });
-                    console.error('Godot MCP server started');
+                    _a.trys.push([4, 6, , 7]);
+                    return [4 /*yield*/, server.start({
+                            transportType: 'stdio',
+                        })];
+                case 5:
+                    _a.sent();
+                    console.error('Godot MCP server started successfully');
+                    return [3 /*break*/, 7];
+                case 6:
+                    error_2 = _a.sent();
+                    console.error('Failed to start MCP server:', error_2);
+                    throw error_2;
+                case 7:
+                    // Keep the process alive
+                    process.stdin.resume();
+                    keepAlive = setInterval(function () {
+                        // This keeps the event loop active
+                    }, 30000);
                     cleanup = function () {
                         console.error('Shutting down Godot MCP server...');
+                        clearInterval(keepAlive);
                         var godot = getGodotConnection();
                         godot.disconnect();
                         process.exit(0);

@@ -40,7 +40,12 @@ async function main() {
 
   // Register all tools
   [...nodeTools, ...scriptTools, ...sceneTools, ...editorTools].forEach(tool => {
-    server.addTool(tool);
+    server.addTool({
+      name: tool.name,
+      description: tool.description,
+      parameters: tool.parameters,
+      execute: tool.execute,
+    });
   });
 
   // Register all resources
@@ -68,16 +73,29 @@ async function main() {
     console.warn('Will retry connection when commands are executed');
   }
 
-  // Start the server
-  server.start({
-    transportType: 'stdio',
-  });
+  // Start the server with error handling
+  try {
+    await server.start({
+      transportType: 'stdio',
+    });
+    console.error('Godot MCP server started successfully');
+  } catch (error) {
+    console.error('Failed to start MCP server:', error);
+    throw error;
+  }
 
-  console.error('Godot MCP server started');
+  // Keep the process alive
+  process.stdin.resume();
+  
+  // Or use setInterval as a keep-alive mechanism
+  const keepAlive = setInterval(() => {
+    // This keeps the event loop active
+  }, 30000); // Every 30 seconds
 
   // Handle cleanup
   const cleanup = () => {
     console.error('Shutting down Godot MCP server...');
+    clearInterval(keepAlive);
     const godot = getGodotConnection();
     godot.disconnect();
     process.exit(0);
