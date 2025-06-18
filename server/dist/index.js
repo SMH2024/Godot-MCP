@@ -64,6 +64,15 @@ function main() {
             switch (_a.label) {
                 case 0:
                     console.error('Starting Godot MCP server...');
+                    // Add global error handlers
+                    process.on('uncaughtException', function (error) {
+                        console.error('Uncaught Exception:', error);
+                        // Don't exit - log and continue
+                    });
+                    process.on('unhandledRejection', function (reason, promise) {
+                        console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+                        // Don't exit - log and continue
+                    });
                     server = new FastMCP({
                         name: 'GodotMCP',
                         version: '1.0.0',

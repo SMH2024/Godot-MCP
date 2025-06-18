@@ -32,6 +32,17 @@ import {
 async function main() {
   console.error('Starting Godot MCP server...');
 
+  // Add global error handlers
+  process.on('uncaughtException', (error) => {
+    console.error('Uncaught Exception:', error);
+    // Don't exit - log and continue
+  });
+
+  process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+    // Don't exit - log and continue
+  });
+
   // Create FastMCP instance
   const server = new FastMCP({
     name: 'GodotMCP',
