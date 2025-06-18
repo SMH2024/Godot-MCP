@@ -63,8 +63,8 @@ server.start({
 server.start({
   transportType: 'sse',
   sse: {
-    endpoint: '/sse',
-    port: 8080
+	endpoint: '/sse',
+	port: 8080
   }
 });
 ```
@@ -134,8 +134,8 @@ src/
 │   ├── script_tools.ts   # Script manipulation tools
 │   └── resource_tools.ts # Resource manipulation tools
 └── utils/                # Utility functions
-    ├── websocket.ts      # WebSocket utilities
-    └── error_handler.ts  # Error handling utilities
+	├── websocket.ts      # WebSocket utilities
+	└── error_handler.ts  # Error handling utilities
 ```
 
 ### Key Classes
@@ -153,8 +153,8 @@ The server communicates with Godot using a JSON-based protocol:
 {
   "type": "command_type",
   "params": {
-    "param1": "value1",
-    "param2": "value2"
+	"param1": "value1",
+	"param2": "value2"
   },
   "commandId": "unique_command_id"
 }
@@ -200,17 +200,17 @@ server.addTool({
   name: 'my_new_tool',
   description: 'Description of what the tool does',
   parameters: z.object({
-    param1: z.string().describe('Description of param1'),
-    param2: z.number().describe('Description of param2')
+	param1: z.string().describe('Description of param1'),
+	param2: z.number().describe('Description of param2')
   }),
   execute: async (args) => {
-    const godot = getGodotConnection();
-    try {
-      const result = await godot.sendCommand('my_command', args);
-      return `Operation completed: ${result.someValue}`;
-    } catch (error) {
-      throw new Error(`Failed: ${error.message}`);
-    }
+	const godot = getGodotConnection();
+	try {
+	  const result = await godot.sendCommand('my_command', args);
+	  return `Operation completed: ${result.someValue}`;
+	} catch (error) {
+	  throw new Error(`Failed: ${error.message}`);
+	}
   }
 });
 ```
