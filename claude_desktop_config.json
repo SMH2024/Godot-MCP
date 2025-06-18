@@ -5,6 +5,7 @@
       "args": [
         "C:\\Users\\scott\\godot-mcp\\server\\dist\\index.js"
       ],
+      "cwd": "C:\\Users\\scott\\godot-mcp\\server",
       "env": {
         "MCP_TRANSPORT": "stdio"
       }
